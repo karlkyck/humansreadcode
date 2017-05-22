@@ -12,7 +12,7 @@ The inspiration for this blog post comes from the book [Functional Programming i
 
 Let's begin with a simplified problem that has been solved using standard types and show how that can get you into trouble:
 
-```Java
+```java
 public class InvoiceItem {
     public final String description;
     public final double amount;
@@ -30,7 +30,7 @@ public class InvoiceItem {
 
 Imagine we have invoice items, each representing a piece of work that has been completed. There’s a description, the invoiceable amount, and the vat amount. Say we want to create an overall invoice with a total amount and a total vat amount. Well here is one possible solution:
 
-```Java
+```java
 InvoiceItem hardWork = new InvoiceItem(
         "Hard work!",
         40.1,
@@ -70,7 +70,7 @@ System.out.println(String.format("Total invoice vat amount is %s", totalVatAmoun
 
 First we instantiate our InvoiceItem objects representing the work that has been completed:
 
-```Java
+```java
 InvoiceItem hardWork = new InvoiceItem(
         "Hard work!",
         40.1,
@@ -80,7 +80,7 @@ InvoiceItem hardWork = new InvoiceItem(
 
 Then we create an immutable list with all the InvoiceItems we want to use to calculate our totals:
 
-```Java
+```java
 List<InvoiceItem> invoiceItems = Collections.unmodifiableList(
         Arrays.asList(
                 hardWork,
@@ -91,7 +91,7 @@ List<InvoiceItem> invoiceItems = Collections.unmodifiableList(
 
 Next we sum our values using the Stream API in Java 8 by mapping our Stream of InvoiceItem objects to a DoubleStream upon which we can then call the method sum():
 
-```Java
+```java
 double totalAmount = invoiceItems
         .stream()
         .mapToDouble(value -> value.vatAmount)
@@ -107,7 +107,7 @@ Total invoice vat amount is 200.6
 
 This wasn't the result we were expecting! The bug is subtle and the compiler cannot help us with these kinds of errors. We went wrong by mixing up the amount and vatAmount values in our calculation:
  
-```Java
+```java
 double totalAmount = invoiceItems
         .stream()
         .mapToDouble(value -> value.vatAmount)
@@ -127,7 +127,7 @@ The problem is we are using variables of the same type for amount, and vatAmount
 
 ## Defining our Value Types
 
-```Java
+```java
 public class Amount {
 
     public final double value;
@@ -138,7 +138,7 @@ public class Amount {
 }
 ```
 
-```Java
+```java
 public class VatAmount {
 
     public final double value;
@@ -151,7 +151,7 @@ public class VatAmount {
 
 Oops the problem remains as we can still mix up our types so we're not quite there yet:
 
-```Java
+```java
 double totalAmount = invoiceItems
     .stream()
     .mapToDouble(item -> item.vatAmount.value)
@@ -167,7 +167,7 @@ double totalVatAmount = invoiceItems
 
 Let's tighten up our Amount and VatAmount Value Types by including a method for addition. We should lock down our value variable while we are at. The `ZERO` constant will come in useful for a foldLeft operation later. And `toString()` helps us with debugging:
 
-```Java
+```java
 public class Amount {
 
     public static final Amount ZERO = new Amount(0);
@@ -188,7 +188,7 @@ public class Amount {
 }
 ```
 
-```Java
+```java
 public class VatAmount {
 
     public static final VatAmount ZERO = new VatAmount(0);
