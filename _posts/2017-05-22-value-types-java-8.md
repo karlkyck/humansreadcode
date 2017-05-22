@@ -12,7 +12,7 @@ The inspiration for this blog post comes from the book [Functional Programming i
 
 Let's begin with a simplified problem that has been solved using standard types and show how that can get you into trouble:
 
-```
+```Java
 public class InvoiceItem {
     public final String description;
     public final double amount;
@@ -30,7 +30,7 @@ public class InvoiceItem {
 
 Imagine we have invoice items, each representing a piece of work that has been completed. There’s a description, the invoiceable amount, and the vat amount. Say we want to create an overall invoice with a total amount and a total vat amount. Well here is one possible solution:
 
-```
+```Java
 InvoiceItem hardWork = new InvoiceItem(
         "Hard work!",
         40.1,
@@ -70,7 +70,7 @@ System.out.println(String.format("Total invoice vat amount is %s", totalVatAmoun
 
 First we instantiate our InvoiceItem objects representing the work that has been completed:
 
-```
+```Java
 InvoiceItem hardWork = new InvoiceItem(
         "Hard work!",
         40.1,
@@ -80,7 +80,7 @@ InvoiceItem hardWork = new InvoiceItem(
 
 Then we create an immutable list with all the InvoiceItems we want to use to calculate our totals:
 
-```
+```Java
 List<InvoiceItem> invoiceItems = Collections.unmodifiableList(
         Arrays.asList(
                 hardWork,
@@ -91,7 +91,7 @@ List<InvoiceItem> invoiceItems = Collections.unmodifiableList(
 
 Next we sum our values using the Stream API in Java 8 by mapping our Stream of InvoiceItem objects to a DoubleStream upon which we can then call the method sum():
 
-```
+```Java
 double totalAmount = invoiceItems
         .stream()
         .mapToDouble(value -> value.vatAmount)
@@ -107,7 +107,7 @@ Total invoice vat amount is 200.6
 
 This wasn't the result we were expecting! The bug is subtle and the compiler cannot help us with these kinds of errors. We went wrong by mixing up the amount and vatAmount values in our calculation:
  
-```
+```Java
 double totalAmount = invoiceItems
         .stream()
         .mapToDouble(value -> value.vatAmount)
@@ -151,7 +151,7 @@ public class VatAmount {
 
 Oops the problem remains as we can still mix up our types so we're not quite there yet:
 
-```
+```Java
 double totalAmount = invoiceItems
     .stream()
     .mapToDouble(item -> item.vatAmount.value)
@@ -167,7 +167,7 @@ double totalVatAmount = invoiceItems
 
 Let's tighten up our Amount and VatAmount Value Types by including a method for addition. We should lock down our value variable while we are at. The `ZERO` constant will come in useful for a foldLeft operation later. And `toString()` helps us with debugging:
 
-```
+```Java
 public class Amount {
 
     public static final Amount ZERO = new Amount(0);
@@ -188,7 +188,7 @@ public class Amount {
 }
 ```
 
-```
+```Java
 public class VatAmount {
 
     public static final VatAmount ZERO = new VatAmount(0);
@@ -212,7 +212,7 @@ public class VatAmount {
 
 Now we refactor our InvoiceItem class to use our new Value Types:
 
-```
+```java
 public class InvoiceItem {
 
     public final String description;
@@ -231,7 +231,7 @@ public class InvoiceItem {
 
 Let's revisit our solution to calculate the total amount and VAT amount and apply our changes:
 
-```
+```java
 InvoiceItem hardWork = new InvoiceItem(
         "Hard work!",
         new Amount(40.1),
@@ -274,7 +274,7 @@ VatAmount totalVatAmount = invoiceItems
 
 There's no longer any ambiguity when applying our Value Types. The compiler will complain if you don't pass the right type during construction of the InvoiceItem objects:
   
-```
+```java
 InvoiceItem hardWork = new InvoiceItem(
         "Hard work!",
         new Amount(40.1),
@@ -284,7 +284,7 @@ InvoiceItem hardWork = new InvoiceItem(
 
 Now when we go to sum the amount we can no longer mix up our types. The `reduce()` method is Java 8's equivalent to a foldLeft operation. We are expecting an Amount type to be returned from the calculation and the compiler will complain if you don't use the correct type:  
 
-```
+```java
 Amount totalAmount = invoiceItems
     .stream()
     .reduce(
@@ -304,7 +304,7 @@ This final bi-function is used when using operations on Streams in parallel. In 
  
 We have the compiler working for us and we have improved our code by making it more type safe. We can do better still. Let's add some validation to our new Value Types and create a convenient method for their construction:
 
-```
+```java
 private Amount(double value) {
     this.value = value;
 }
@@ -320,7 +320,7 @@ public static Amount of(double value) {
 
 We've locked down our constructor and introduced a static factory method `of()` that contains our validation logic. Now when we go to instantiate an Amount object it will look like:
 
-```
+```java
 Amount.of(40.1);
 ```
 
@@ -328,7 +328,7 @@ Amount.of(40.1);
 
 Before wrapping up let’s have a quick look at Immutables, a handy library for generating Immutable objects in Java at compile time. Here is what our Amount Value Type looks like when using Immutables.io:
 
-```
+```java
 @Value.Immutable
 @Value.Style(visibility = Value.Style.ImplementationVisibility.PACKAGE)
 public abstract class Amount {
@@ -357,7 +357,7 @@ public abstract class Amount {
 
 There's still quite a bit of boilerplate when defining your Value Types but check out some of the neat extras you get with Immutables:
  
-```
+```java
 @Override
 public boolean equals(Object another) {
     if (this == another) return true;
