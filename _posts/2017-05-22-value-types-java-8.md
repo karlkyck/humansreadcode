@@ -1,10 +1,13 @@
 ---
-layout: default
-title:  "Value Types in Java 8"
-date:   2017-05-22 17:00:00 +0000
+layout: post
+title: "Value Types in Java 8"
+author: karl
+date: 2017-05-22
+comment: true
+categories: [Articles]
+published: true
+noindex: false
 ---
-Value Types in Java 8
-==================
 The inspiration for this blog post comes from the book [Functional Programming in Java](https://www.manning.com/books/functional-programming-in-java) by Pierre-Yves Saumont. Value Types and how to implement them in Java is introduced early in the book and for good reason. Value Types are great for increasing type safety and getting the compiler to detect errors for you while you write code. 
 
 Let's begin with a simplified problem that has been solved using standard types and show how that can get you into trouble:
