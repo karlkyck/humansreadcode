@@ -119,7 +119,7 @@ double totalVatAmount = invoiceItems
         .sum();
 ```
 
-The only way to catch these kinds of bugs is to test our code. Tests are great, essential even, and remain the single most effective way to ensure that your code meets business and functional requirements. I cannot recommend enough adopting such practices as TDD and BDD. Tests are also prone to error. And other than <> who tests the tests? 
+The only way to catch these kinds of bugs is to test our code. Tests are great, essential even, and remain the single most effective way to ensure that your code meets business and functional requirements. I cannot recommend enough adopting such practices as TDD and BDD. Tests are also prone to error.
 
 Instead let's get the compiler to catch these kinds of errors for us. That way we can speed up development and get feedback while we write our code.
 
