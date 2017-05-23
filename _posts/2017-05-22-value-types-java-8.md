@@ -8,7 +8,7 @@ categories: [Articles]
 published: true
 noindex: false
 ---
-The inspiration for this blog post comes from the book [Functional Programming in Java](https://www.manning.com/books/functional-programming-in-java) by Pierre-Yves Saumont. Value Types and how to implement them in Java is introduced early in the book and for good reason. Value Types are great for increasing type safety and getting the compiler to detect errors for you while you write code. 
+This is a blog post based on the lightning talk I gave at the [Kats Conf 2](http://www.katsconf.com/) conference in Dublin. The inspiration came from the book [Functional Programming in Java](https://www.manning.com/books/functional-programming-in-java) by Pierre-Yves Saumont. Value Types and how to implement them in Java is introduced early in the book and for good reason. Value Types are great for increasing type safety and getting the compiler to detect errors for you while you write code. 
 
 Let's begin with a simplified problem that has been solved using standard types and show how that can get you into trouble:
 
