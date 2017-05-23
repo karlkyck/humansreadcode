@@ -4,12 +4,15 @@ title: About
 permalink: /about/
 ---
 
-Some information about you!
+Hi there I'm Karl Kyck a full-stack software developer with over 16 years experience with a love of coding and best practices. 
+Polyglot programmer specialising in Java, Functional Programming, Angular, Android, DevOps, and Agile/Lean methodologies.
 
 ### More Information
 
-A place to include any other types of information that you'd like to include about yourself.
+[WithWoofLogo]: https://www.withwoof.com/assets/images/logomark_32x32.png "WithWoof logo"
+
+![][WithWoofLogo] I'm currently working on my startup [WithWoof](https://www.withwoof.com) an iOS, Android, and Web app that lets you search for dog-friendly spots to visit with your canine companion.
 
 ### Contact me
 
-[email@domain.com](mailto:email@domain.com)
+[karlkyck@gmail.com](mailto:karlkyck@gmail.com)
