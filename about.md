@@ -15,4 +15,4 @@ I'm currently working on my startup ![][WithWoofLogo] [WithWoof](https://www.wit
 
 ### Contact me
 
-[karlkyck@gmail.com](mailto:karlkyck@gmail.com)
+You can use the footer links to contact me.
