@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Performance testing during development using ab on Docker"
+title: "Performance Testing using ab & Docker"
 author: karl
 date: 2017-05-29
 comment: true
