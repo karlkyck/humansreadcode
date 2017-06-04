@@ -4,8 +4,8 @@ title: About
 permalink: /about/
 ---
 
-Hi there I'm Karl Kyck a full-stack software developer with over 16 years experience with a love of coding and best practices. 
-Polyglot programmer specialising in Java, Functional Programming, Reactive Design Patterns, Angular, Android, DevOps, and Agile/Lean methodologies.
+Hi there, I'm Karl Kyck a full-stack software developer with over 16 years experience with a love of coding and best practices. 
+I'm a polyglot programmer specialising in Java, Functional Programming, Reactive Design Patterns, Angular, Android, DevOps, and Agile/Lean methodologies.
 
 ### More Information
 
