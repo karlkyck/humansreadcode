@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Self Contained Projects with the Gradle Wrapper"
+title:  "Self Contained Projects with Gradle Wrapper"
 author: karl
 date: 2017-06-03
 comment: true
@@ -10,9 +10,10 @@ noindex: false
 ---
 The Gradle Wrapper is a handy way of bundling a Gradle runtime with your project.
 That way you provide a specific version of Gradle to be used with your project and Gradle does not have to be installed separately.
+This is very useful for anyone who clones your repo and wants to build your project.
+
 To generate a Gradle Wrapper for your project you will need to have Gradle installed.
 This is necessary to first generate the Gradle Wrapper but from then on the Wrapper can be used to run Gradle commands against your project without having to have Gradle installed.
-Very useful for anyone who clones your repo and wants to build your project.
 
 You can find a sample project using the Gradle Wrapper [here](https://github.com/karlkyck/spring-boot-completablefuture)
 
