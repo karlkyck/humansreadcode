@@ -8,7 +8,9 @@ categories: [Articles]
 published: true
 noindex: false
 ---
-This is a blog post based on the lightning talk I gave at the [Kats Conf 2](http://www.katsconf.com/) conference in Dublin. The inspiration came from the book [Functional Programming in Java](https://www.manning.com/books/functional-programming-in-java) by Pierre-Yves Saumont. Value Types and how to implement them in Java is introduced early in the book and for good reason. Value Types are great for increasing type safety and getting the compiler to detect errors for you while you write code. 
+This is a blog post based on the lightning talk I gave at the [Kats Conf 2](http://www.katsconf.com/) conference in Dublin. The inspiration came from the book [Functional Programming in Java](https://www.manning.com/books/functional-programming-in-java) by Pierre-Yves Saumont. value types and how to implement them in Java is introduced early in the book and for good reason. value types are great for increasing type safety and getting the compiler to detect errors for you while you write code.
+ 
+You can find the source code for this blog post [here](https://github.com/karlkyck/valuetypes-in-java8).
 
 Let's begin with a simplified problem that has been solved using standard types and show how that can get you into trouble:
 
@@ -89,7 +91,7 @@ List<InvoiceItem> invoiceItems = Collections.unmodifiableList(
         ));
 ```
 
-Next we sum our values using the Stream API in Java 8 by mapping our Stream of InvoiceItem objects to a DoubleStream upon which we can then call the method sum():
+Next we sum our values using the [Stream API in Java 8](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html) by mapping our `Stream` of `InvoiceItem` objects to a `DoubleStream` upon which we can then call the method `sum()`:
 
 ```java
 double totalAmount = invoiceItems
@@ -105,7 +107,9 @@ Total invoice amount is 38.6165
 Total invoice vat amount is 200.6
 ```
 
-This wasn't the result we were expecting! The bug is subtle and the compiler cannot help us with these kinds of errors. We went wrong by mixing up the amount and vatAmount values in our calculation:
+This isn't the result we are expecting! 
+The bug is subtle and the compiler cannot help us with these kinds of errors. 
+We went wrong by mixing up the `amount` and `vatAmount` values in our calculation:
  
 ```java
 double totalAmount = invoiceItems
@@ -119,13 +123,18 @@ double totalVatAmount = invoiceItems
         .sum();
 ```
 
-The only way to catch these kinds of bugs is to test our code. Tests are great, essential even, and remain the single most effective way to ensure that your code meets business and functional requirements. I cannot recommend enough adopting such practices as TDD and BDD. Tests are also prone to error. And other than [mutation testing](http://pitest.org/) who tests the tests?
+The only way to catch these kinds of bugs is to test our code. 
+Tests are great, essential even, and remain the single most effective way to ensure that your code meets business and functional requirements. 
+I cannot recommend enough adopting such practices as TDD and BDD. 
+Tests are also prone to error. 
+And other than [mutation testing](http://pitest.org/) who tests the tests?
 
-Instead let's get the compiler to catch these kinds of errors for us. That way we can speed up development and get feedback while we write our code.
+Instead let's get the compiler to catch these kinds of errors for us. 
+That way we can speed up development and get feedback while we write our code.
 
-The problem is we are using variables of the same type for amount, and vatAmount. Let’s define the Value Types Amount and VatAmount.
+The problem is we are using variables of the same type for `amount`, and `vatAmount`. Let’s define the value types `Amount` and `VatAmount`.
 
-## Defining our Value Types
+## Defining our value types
 
 ```java
 public class Amount {
@@ -163,9 +172,10 @@ double totalVatAmount = invoiceItems
     .sum();
 ```
 
-## Strict Value Types
-
-Let's tighten up our Amount and VatAmount Value Types by including a method for addition. We should lock down our value variable while we are at. The `ZERO` constant will come in useful for a foldLeft operation later. And `toString()` helps us with debugging:
+## Strict value types
+Let's tighten up our `Amount` and `VatAmount` value types by including a method for addition. 
+We should make our `value` member variable private while we are at. 
+The `ZERO` constant will come in useful for a [reduction](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#reduce-U-java.util.function.BiFunction-java.util.function.BinaryOperator-) operation later. And `toString()` helps us with debugging:
 
 ```java
 public class Amount {
@@ -210,7 +220,7 @@ public class VatAmount {
 }
 ```
 
-Now we refactor our InvoiceItem class to use our new Value Types:
+Now we refactor our `InvoiceItem` class to use our new value types:
 
 ```java
 public class InvoiceItem {
@@ -228,7 +238,6 @@ public class InvoiceItem {
 ```
 
 ## Applying our changes to our solution
-
 Let's revisit our solution to calculate the total amount and VAT amount and apply our changes:
 
 ```java
@@ -272,7 +281,8 @@ VatAmount totalVatAmount = invoiceItems
         );
 ```
 
-There's no longer any ambiguity when applying our Value Types. The compiler will complain if you don't pass the right type during construction of the InvoiceItem objects:
+There's no longer any ambiguity when applying our value types. 
+The compiler will complain if you don't pass the right type during construction of the `InvoiceItem` objects:
   
 ```java
 InvoiceItem hardWork = new InvoiceItem(
@@ -282,7 +292,9 @@ InvoiceItem hardWork = new InvoiceItem(
 );
 ```
 
-Now when we go to sum the amount we can no longer mix up our types. The `reduce()` method is Java 8's equivalent to a foldLeft operation. We are expecting an Amount type to be returned from the calculation and the compiler will complain if you don't use the correct type:  
+Now when we go to sum the amount we can no longer mix up our types. 
+The `reduce()` method is Java 8's equivalent to a foldLeft operation. 
+We are expecting an `Amount` type to be returned from the calculation and the compiler will complain if you don't use the correct type:  
 
 ```java
 Amount totalAmount = invoiceItems
@@ -294,15 +306,18 @@ Amount totalAmount = invoiceItems
     );
 ```
 
-The `reduce()` method takes a starting value of type Amount, in this case starting at zero with `Amount.ZERO`. The method also takes a bi-function that takes the accumulator value of type Amount and the next InvoiceItem object in the Stream and returns an object of type Amount. 
+The `reduce()` method takes a starting value of type `Amount`, in this case starting at zero with `Amount.ZERO`. 
+The method also takes a [bi-function](https://docs.oracle.com/javase/8/docs/api/java/util/function/BiFunction.html) that takes the accumulator value of type `Amount` and the next `InvoiceItem` object in the `Stream` and returns an object of type `Amount`. 
 
-Inside this function we add the accumulator Amount parameter to the Amount field of the InvoiceItem parameter thus producing and returning an Amount type. The final parameter to the `reduce()` method takes a bi-function that takes two parameters of type Amount and produces a result of type Amount. 
+Inside this function we add the accumulator `Amount` parameter to the `Amount` field of the `InvoiceItem` parameter thus producing and returning an `Amount` type. 
+The final parameter to the `reduce()` method takes a `bi-function` that takes two parameters of type `Amount` and produces a result of type `Amount`. 
 
-This final bi-function is used when using operations on Streams in parallel. In this case we merely use the `add()` method to sum Amount objects.
+This final `bi-function` is used when using operations on Streams in parallel. 
+In this case we merely use the `add()` method to sum `Amount` objects.
 
-## We can do better still
- 
-We have the compiler working for us and we have improved our code by making it more type safe. We can do better still. Let's add some validation to our new Value Types and create a convenient method for their construction:
+## We can do better still 
+We have the compiler working for us and we have improved our code by making it more type safe. We can do better still. 
+Let's add some validation to our new value types and create a convenient method for their construction:
 
 ```java
 private Amount(double value) {
@@ -318,15 +333,13 @@ public static Amount of(double value) {
 }
 ```
 
-We've locked down our constructor and introduced a static factory method `of()` that contains our validation logic. Now when we go to instantiate an Amount object it will look like:
-
-```java
-Amount.of(40.1);
-```
+We've locked down our constructor and introduced a static factory method `of()` that contains our validation logic. 
+Now when we go to instantiate an `Amount` object it will look like `Amount.of(40.1);`. Nice and neat.
 
 ## Immutables.io library
 
-Before wrapping up let’s have a quick look at Immutables, a handy library for generating Immutable objects in Java at compile time. Here is what our Amount Value Type looks like when using Immutables.io:
+Before wrapping up let’s have a quick look at [Immutables](https://immutables.github.io/), a handy library for generating immutable objects in Java at compile time. 
+Here is what our `Amount` value type looks like when using Immutables:
 
 ```java
 @Value.Immutable
@@ -355,7 +368,7 @@ public abstract class Amount {
 }
 ```
 
-There's still quite a bit of boilerplate when defining your Value Types but check out some of the neat extras you get with Immutables:
+There's still quite a bit of boilerplate when defining your value types but check out some of the neat extras you get with Immutables:
  
 ```java
 @Override
@@ -382,10 +395,8 @@ public static ImmutableAmount copyOf(Amount instance) {
 }
 ```
 
-It auto generates an equality method along with a `hashCode()` method that uses the standard type that's being wrapped. Along with that you get a copyOf method. Pretty handy.
+It auto generates an equality method along with a `hashCode()` method that uses the standard type that's being wrapped. 
+Along with that you get a copyOf method. 
+Pretty handy.
 
-Hopefully this blog post has demonstrated how useful Value Types are and how they can improve your code.
-
-You can find the source code for this blog post here:
-
-[https://github.com/karlkyck/valuetypes-in-java8](https://github.com/karlkyck/valuetypes-in-java8)
+Hopefully this blog post has demonstrated how useful value types are and how they can improve your code.
