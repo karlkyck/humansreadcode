@@ -8,7 +8,7 @@ categories: [Articles]
 published: true
 noindex: false
 ---
-This is a blog post based on the lightning talk I gave at the [Kats Conf 2](http://www.katsconf.com/) conference in Dublin. The inspiration came from the book [Functional Programming in Java](https://www.manning.com/books/functional-programming-in-java) by Pierre-Yves Saumont. value types and how to implement them in Java is introduced early in the book and for good reason. value types are great for increasing type safety and getting the compiler to detect errors for you while you write code.
+This is a blog post based on the lightning talk I gave at the [Kats Conf 2](http://www.katsconf.com/) conference in Dublin. The inspiration came from the book [Functional Programming in Java](https://www.manning.com/books/functional-programming-in-java) by Pierre-Yves Saumont. Value types and how to implement them in Java is introduced early in the book and for good reason. value types are great for increasing type safety and getting the compiler to detect errors for you while you write code.
  
 You can find the source code for this blog post [here](https://github.com/karlkyck/valuetypes-in-java8).
 
@@ -30,7 +30,7 @@ public class InvoiceItem {
 
 ## One possible solution
 
-Imagine we have invoice items, each representing a piece of work that has been completed. There’s a description, the invoiceable amount, and the vat amount. Say we want to create an overall invoice with a total amount and a total vat amount. Well here is one possible solution:
+Imagine we have invoice items, each representing a piece of work that has been completed. There’s a description, the invoiceable amount, and the vat amount. Say we want to create an overall invoice with a total amount and a total VAT amount. Well here is one possible solution:
 
 ```java
 InvoiceItem hardWork = new InvoiceItem(
@@ -67,10 +67,10 @@ double totalVatAmount = invoiceItems
         .sum();
 
 System.out.println(String.format("Total invoice amount is %s", totalAmount));
-System.out.println(String.format("Total invoice vat amount is %s", totalVatAmount));
+System.out.println(String.format("Total invoice VAT amount is %s", totalVatAmount));
 ```
 
-First we instantiate our InvoiceItem objects representing the work that has been completed:
+First we instantiate our `InvoiceItem` objects representing the work that has been completed:
 
 ```java
 InvoiceItem hardWork = new InvoiceItem(
@@ -80,7 +80,7 @@ InvoiceItem hardWork = new InvoiceItem(
 );
 ```
 
-Then we create an immutable list with all the InvoiceItems we want to use to calculate our totals:
+Then we create an immutable list with all the `InvoiceItem` objects we want to use to calculate our totals:
 
 ```java
 List<InvoiceItem> invoiceItems = Collections.unmodifiableList(
@@ -104,7 +104,7 @@ The code compiles and runs OK and produces the following output:
 
 ```
 Total invoice amount is 38.6165
-Total invoice vat amount is 200.6
+Total invoice VAT amount is 200.6
 ```
 
 This isn't the result we are expecting! 
