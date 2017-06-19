@@ -18,7 +18,7 @@ When invoked the query method will return immediately with the actual query exec
 
 You can find the source code for this blog post [here](https://github.com/karlkyck/spring-boot-completablefuture/blob/master/src/main/java/com/humansreadcode/example/repository/UserRepository.java).
 
-####Repository
+#### Repository
 Creating asynchronous query methods in a Repository is as simple as returning CompletableFuture from your query method and annotating it with `@Async`:
 
 ```java
@@ -35,7 +35,7 @@ public interface UserRepository extends MongoRepository<User, String> {
 Spring even allows you to specify the `TaskExecutor` to run the query on.
 In this case the query methods are using a `TaskExecutor` configured in the custom `AsyncConfiguration` file.
 
-####Task Executor
+#### Task Executor
 When configuring a `TaskExecutor` to use with asynchronous query method it is often advantageous to use a bounded [ThreadPoolTaskExecutor](http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/scheduling/concurrent/ThreadPoolTaskExecutor.html).
   
 A bounded thread pool is better for performance as spawning a new thread for each request can be costly. 
