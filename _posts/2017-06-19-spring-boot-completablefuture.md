@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Non-blocking with Spring Boot & CompletableFuture"
+title:  "Non-blocking Web Apps with Spring Boot & CompletableFuture"
 author: karl
 date: 2017-06-19
 comment: true
